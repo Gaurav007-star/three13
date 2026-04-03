@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import bgImage from './assets/background.jpeg'
+// import SpringImage from "./assets/spring.png"
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { toast } from 'sonner'
@@ -42,12 +43,13 @@ const App = () => {
       <AnimatePresence>
         {showForm && (
           <motion.button
+            layout
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
             onClick={() => setShowForm(false)}
-            className="absolute top-5 left-5 z-20 text-brand-dark hover:scale-110 transition-transform duration-300 cursor-pointer"
+            className="absolute top-5 left-5 z-20 text-brand-dark hover:scale-110 transition-transform duration-600 ease-in-out cursor-pointer"
             aria-label="Go back"
           >
             <ArrowLeft size={24} strokeWidth={1.5} />
@@ -60,22 +62,24 @@ const App = () => {
         <AnimatePresence>
           {showForm ? (
             <motion.div
+              layout
               key="inner-circle"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
               className="absolute"
             >
               Welcome to the inner circle
             </motion.div>
           ) : (
             <motion.div
+              layout
               key="launching"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
               className="absolute"
             >
               Launching Summer 2026
@@ -90,11 +94,12 @@ const App = () => {
           <AnimatePresence>
 
             <motion.div
+              layout
               key="form"
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
               className="w-full bg-[#FAF8F6]/80 backdrop-blur-md rounded-2xl p-8 sm:p-10 shadow-sm flex flex-col items-center border border-white/60"
             >
               <h2 className="uppercase text-lg sm:text-xl tracking-[0.15em] text-brand-dark mb-6 font-medium">
@@ -113,7 +118,7 @@ const App = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-10 bg-brand-light hover:bg-brand-dark text-[#FBF9F8] uppercase tracking-widest rounded-full transition-colors duration-300"
+                  className="w-full h-10 bg-brand-light hover:bg-brand-dark text-[#FBF9F8] uppercase tracking-widest rounded-full transition-colors duration-600 ease-in-out"
                 >
                   {isSubmitting ? 'Joining...' : 'Join Mailing List'}
                 </Button>
@@ -128,32 +133,31 @@ const App = () => {
 
 
       {/* Bottom Area */}
-      <div className={`relative z-10 flex flex-col items-center justify-center pb-12 min-h-[160px] ${showForm ? 'mt-auto' : ''}`}>
-        <div className="text-center mb-8 w-full" style={{
-          marginTop:showForm ? "10px" : "200px"
+      <motion.div layout transition={{ duration: 0.6, ease: "easeInOut" }} className={`relative z-10 flex flex-col items-center justify-center pb-12 min-h-[160px] ${showForm ? 'mt-auto' : ''}`}>
+        <motion.div layout transition={{ duration: 0.6, ease: "easeInOut" }} className="text-center w-full" style={{
+          marginTop: showForm ? "10px" : "150px",
+          marginBottom: showForm ? "32px" : "32px"
         }}>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-[0.25em] text-brand-dark mb-4 max-[450px]:mt-5">
             Three13 Studio
           </h1>
-          <p className="tracking-[0.4em] uppercase text-xs sm:text-sm font-semibold">
-            Est 2023
-          </p>
-        </div>
+        </motion.div>
 
         <div className="relative w-full flex items-center justify-center h-[48px]">
           <AnimatePresence>
             {!showForm && (
               <motion.div
+                layout
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
                 className="absolute"
               >
                 <Button
                   onClick={() => setShowForm(true)}
                   variant="outline"
-                  className="rounded-full border-brand-dark border-[1.5px] text-brand-dark bg-transparent hover:bg-brand-dark hover:text-white px-8 h-12 uppercase tracking-[0.15em] text-xs font-semibold transition-all duration-300 cursor-pointer"
+                  className="rounded-full border-brand-dark border-[1.5px] text-brand-dark bg-transparent hover:bg-brand-dark hover:text-white px-8 h-12 uppercase tracking-[0.15em] text-xs font-semibold transition-all duration-600 ease-in-out cursor-pointer"
                 >
                   Save Your Seat →
                 </Button>
@@ -161,7 +165,7 @@ const App = () => {
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
