@@ -6,26 +6,37 @@ import bgImage from './assets/background.jpeg'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { toast } from 'sonner'
+import { supabase } from './utils/supabase'
 
 const App = () => {
   const [showForm, setShowForm] = useState(false)
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
 
     setIsSubmitting(true)
-    // Simulate API request
-    setTimeout(() => {
+    
+    // Insert into Supabase
+    const { error } = await supabase
+      .from('subscribers')
+      .insert([{ email }])
+
+    setIsSubmitting(false)
+
+    if (error) {
+      toast.error('Failed to subscribe', {
+        description: error.message || "Please check your email and try again.",
+      })
+    } else {
       toast.success('Successfully subscribed!', {
         description: "We'll notify you when we launch.",
       })
       setEmail('')
-      setIsSubmitting(false)
       setShowForm(false)
-    }, 800)
+    }
   }
 
   return (
@@ -108,6 +119,7 @@ const App = () => {
               <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <Input
                   type="email"
+                  name="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
