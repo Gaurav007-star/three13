@@ -4,17 +4,36 @@ import { motion, AnimatePresence } from 'motion/react'
 import bgImage from './assets/background.jpeg'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
+import { toast } from 'sonner'
 
 const App = () => {
   const [showForm, setShowForm] = useState(false)
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    setIsSubmitting(true)
+    // Simulate API request
+    setTimeout(() => {
+      toast.success('Successfully subscribed!', {
+        description: "We'll notify you when we launch.",
+      })
+      setEmail('')
+      setIsSubmitting(false)
+      setShowForm(false)
+    }, 800)
+  }
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-between p-8 font-sans overflow-hidden bg-[#FBF9F8] text-brand-dark">
+    <div className={`relative min-h-screen w-full flex flex-col items-center p-8 font-sans overflow-hidden bg-[#FBF9F8] text-brand-dark ${showForm ? 'justify-between' : 'justify-center'}`}>
       {/* Background Image Setup */}
       <div className="absolute inset-0 z-0 flex shadow-inner pointer-events-none">
-        <img 
-          src={bgImage} 
-          alt="Studio Background" 
+        <img
+          src={bgImage}
+          alt="Studio Background"
           className="w-full h-full object-cover object-center opacity-60 mix-blend-multiply -scale-x-100"
         />
       </div>
@@ -22,7 +41,7 @@ const App = () => {
       {/* Back Button */}
       <AnimatePresence>
         {showForm && (
-          <motion.button 
+          <motion.button
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
@@ -37,7 +56,7 @@ const App = () => {
       </AnimatePresence>
 
       {/* Top Header */}
-      <div className="relative z-10 pt-10 md:pt-16 uppercase tracking-[0.25em] font-medium text-sm text-center h-6 flex items-center justify-center w-full">
+      <div className={`relative z-10 uppercase tracking-[0.25em] font-medium text-sm text-center h-6 flex items-center justify-center w-full ${showForm ? 'pt-10 md:pt-16' : 'mb-12 md:mb-16'}`}>
         <AnimatePresence>
           {showForm ? (
             <motion.div
@@ -66,10 +85,11 @@ const App = () => {
       </div>
 
       {/* Middle Form Area */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center flex-1 my-8 max-w-sm sm:max-w-[450px]">
-        <AnimatePresence>
-          {showForm && (
-            <motion.div 
+      {
+        showForm && <div className="relative z-10 w-full flex flex-col items-center justify-center flex-1 my-8 max-[450px]:mt-20 max-w-sm sm:max-w-[450px]">
+          <AnimatePresence>
+
+            <motion.div
               key="form"
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -80,26 +100,38 @@ const App = () => {
               <h2 className="uppercase text-lg sm:text-xl tracking-[0.15em] text-brand-dark mb-6 font-medium">
                 Enter your email
               </h2>
-              <div className="w-full space-y-4">
-                <Input 
-                  type="email" 
+              <form onSubmit={handleSubmit} className="w-full space-y-4">
+                <Input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  disabled={isSubmitting}
                   className="w-full h-10 border-brand-dark/30 text-brand-dark bg-transparent focus-visible:ring-brand-light focus-visible:border-brand-light focus-visible:ring-1 rounded-md transition-all outline-none"
                 />
-                <Button className="w-full h-10 bg-brand-light hover:bg-brand-dark text-[#FBF9F8] uppercase tracking-widest rounded-full transition-colors duration-300">
-                  Join Mailing List
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-10 bg-brand-light hover:bg-brand-dark text-[#FBF9F8] uppercase tracking-widest rounded-full transition-colors duration-300"
+                >
+                  {isSubmitting ? 'Joining...' : 'Join Mailing List'}
                 </Button>
-              </div>
-              <p className="text-[9px] sm:text-[10px] tracking-wider text-brand-dark/60 mt-4 text-center">
+              </form>
+              {/* <p className="text-[9px] sm:text-[10px] tracking-wider text-brand-dark/60 mt-4 text-center">
                 Your Canva profile name won't be shared. Never submit passwords.
-              </p>
+              </p> */}
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+          </AnimatePresence>
+        </div>
+      }
+
 
       {/* Bottom Area */}
-      <div className="relative z-10 flex flex-col items-center justify-center pb-12 mt-auto min-h-[160px]">
-        <div className="text-center mb-10 w-full">
+      <div className={`relative z-10 flex flex-col items-center justify-center pb-12 min-h-[160px] ${showForm ? 'mt-auto' : ''}`}>
+        <div className="text-center mb-8 w-full" style={{
+          marginTop:showForm ? "10px" : "200px"
+        }}>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-[0.25em] text-brand-dark mb-4 max-[450px]:mt-5">
             Three13 Studio
           </h1>
@@ -118,9 +150,9 @@ const App = () => {
                 transition={{ duration: 0.3 }}
                 className="absolute"
               >
-                <Button 
+                <Button
                   onClick={() => setShowForm(true)}
-                  variant="outline" 
+                  variant="outline"
                   className="rounded-full border-brand-dark border-[1.5px] text-brand-dark bg-transparent hover:bg-brand-dark hover:text-white px-8 h-12 uppercase tracking-[0.15em] text-xs font-semibold transition-all duration-300 cursor-pointer"
                 >
                   Save Your Seat →
